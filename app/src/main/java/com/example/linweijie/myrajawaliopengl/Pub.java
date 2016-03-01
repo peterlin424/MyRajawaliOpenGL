@@ -7,6 +7,6 @@ public class Pub {
     public static final boolean ISDEBUG = true;
     public static final String TAG = "Peter";
 
-    public static final String CHOOSE_CAMERA = "Camera";
+    public static final String CHOOSE_CAMERA = "ArcballCamera";
     public static final String CHOOSE_MODEL = "Model";
 }

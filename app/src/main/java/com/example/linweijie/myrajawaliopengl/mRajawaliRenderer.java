@@ -22,6 +22,18 @@ public class mRajawaliRenderer extends org.rajawali3d.renderer.RajawaliRenderer 
     public static int FRAME_RATE = 60;
     public Context context;
 
+    private Object3D watch;
+    private ArcballCamera arcball;
+
+    public static double INIT_MODEL_X = 0.0f;
+    public static double INIT_MODEL_Y = 0.0f;
+    public static double INIT_MODEL_Z = 0.0f;
+    public static double INIT_MODEL_SCALE = 2.5f;
+
+    public static double INIT_CAMERA_X = 50.0f;
+    public static double INIT_CAMERA_Y = 50.0f;
+    public static double INIT_CAMERA_Z = 50.0f;
+
     public mRajawaliRenderer(Context context) {
         super(context);
         this.context = context;
@@ -54,7 +66,7 @@ public class mRajawaliRenderer extends org.rajawali3d.renderer.RajawaliRenderer 
             final LoaderOBJ parser = new LoaderOBJ(mContext.getResources(), mTextureManager, R.raw.watch_obj);
             parser.parse();
 
-            final Object3D monkey = parser.getParsedObject();
+            watch = parser.getParsedObject();
 
             /** 模型材質貼皮 */
             Material material = new Material();
@@ -64,13 +76,15 @@ public class mRajawaliRenderer extends org.rajawali3d.renderer.RajawaliRenderer 
             material.addTexture(new Texture("Watch2", R.drawable.watch002));
             material.setColor(0x990000);
 
-            monkey.setMaterial(material);
-            monkey.setScale(2.5f);
-            getCurrentScene().addChild(monkey);
+            watch.setMaterial(material);
+            watch.setPosition(INIT_MODEL_X, INIT_MODEL_Y, INIT_MODEL_Z);
+//            watch.setRotation(INIT_MODEL_X, INIT_MODEL_Y, INIT_MODEL_Z, INIT_MODEL_ROATE);
+            watch.setScale(INIT_MODEL_SCALE);
+            getCurrentScene().addChild(watch);
 
             /** 視角相機設定 */
-            ArcballCamera arcball = new ArcballCamera(mContext, ((Activity)mContext).findViewById(R.id.rejawali_layout));
-            arcball.setPosition(0.1f, 40.0f, 0.0f);
+            arcball = new ArcballCamera(mContext, ((Activity)mContext).findViewById(R.id.rejawali_layout));
+            arcball.setPosition(INIT_CAMERA_X, INIT_CAMERA_Y, INIT_CAMERA_Z);
             getCurrentScene().replaceAndSwitchCamera(getCurrentCamera(), arcball);
         } catch (Exception e){
             e.printStackTrace();
@@ -90,20 +104,24 @@ public class mRajawaliRenderer extends org.rajawali3d.renderer.RajawaliRenderer 
     /**
      * Model
      * */
-    public void setModelPosition(int x, int y, int z){
-
+    public void setModelPosition(double x, double y, double z){
+        watch.setPosition(x, y, z);
     }
-    public void setModelRoate(int angle){
-
+    public void setModelScale(double scale){
+        watch.setScale(scale);
     }
-    public void setModelScale(int scale){
-
+    public void setModelRoateX(double rotx, double roty, double rotz){
+        try {
+            watch.setRotation(rotx, roty, rotz);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**
      * Camera
      * */
-    public void setCameraPosition(int x, int y, int z){
-
+    public void setCameraPosition(double x, double y, double z){
+        arcball.setPosition(x, y, z);
     }
 }
