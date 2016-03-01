@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import org.rajawali3d.surface.IRajawaliSurface;
 import org.rajawali3d.surface.RajawaliSurfaceView;
@@ -14,11 +15,15 @@ import org.rajawali3d.surface.RajawaliSurfaceView;
 public class MainActivity extends AppCompatActivity {
 
     LinearLayout ll_panel;
+    TextView tv_switch_type;
+    LinearLayout ll_roate, ll_scale;
 
     mRajawaliRenderer renderer;
 
     boolean isShow = true;
+    int seekbar_full = 100;
     int x, y, z, roate, scale;
+    String SWITCH_MODE = Pub.CHOOSE_MODEL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +41,14 @@ public class MainActivity extends AppCompatActivity {
         renderer = new mRajawaliRenderer(this);
         surface.setSurfaceRenderer(renderer);
 
-
         //
+        init();
+    }
+    private void init(){
+        SWITCH_MODE = Pub.CHOOSE_MODEL;
+        tv_switch_type = (TextView)findViewById(R.id.tv_switch_type);
+        tv_switch_type.setText(SWITCH_MODE);
+
         ll_panel = (LinearLayout)findViewById(R.id.ll_panel);
         Button bt_show = (Button)findViewById(R.id.bt_show);
         Button bt_reset = (Button)findViewById(R.id.bt_reset);
@@ -47,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
         bt_reset.setOnClickListener(onClickListener);
         bt_switch.setOnClickListener(onClickListener);
 
+        ll_roate = (LinearLayout)findViewById(R.id.ll_roate);
+        ll_scale = (LinearLayout)findViewById(R.id.ll_scale);
         SeekBar sb_x = (SeekBar)findViewById(R.id.sb_x);
         SeekBar sb_y = (SeekBar)findViewById(R.id.sb_y);
         SeekBar sb_z = (SeekBar)findViewById(R.id.sb_z);
@@ -58,6 +71,14 @@ public class MainActivity extends AppCompatActivity {
         sb_z.setOnSeekBarChangeListener(seekBarChangeListener);
         sb_roate.setOnSeekBarChangeListener(seekBarChangeListener);
         sb_scale.setOnSeekBarChangeListener(seekBarChangeListener);
+
+        sb_x.setProgress(seekbar_full / 2);
+        sb_y.setProgress(seekbar_full / 2);
+        sb_z.setProgress(seekbar_full/2);
+        sb_roate.setProgress(seekbar_full/2);
+        sb_scale.setProgress(seekbar_full/2);
+        ll_roate.setVisibility(View.VISIBLE);
+        ll_scale.setVisibility(View.VISIBLE);
     }
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -75,9 +96,23 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.bt_reset:
                     //TODO 重置位置 和 panel
+                    init();
                     break;
                 case R.id.bt_switch:
                     //TODO 切換選擇：相機/物件
+                    switch (SWITCH_MODE){
+                        case Pub.CHOOSE_CAMERA:
+                            SWITCH_MODE = Pub.CHOOSE_MODEL;
+                            ll_roate.setVisibility(View.VISIBLE);
+                            ll_scale.setVisibility(View.VISIBLE);
+                            break;
+                        case Pub.CHOOSE_MODEL:
+                            SWITCH_MODE = Pub.CHOOSE_CAMERA;
+                            ll_roate.setVisibility(View.GONE);
+                            ll_scale.setVisibility(View.GONE);
+                            break;
+                    }
+                    tv_switch_type.setText(SWITCH_MODE);
                     break;
             }
         }

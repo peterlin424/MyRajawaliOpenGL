@@ -86,4 +86,24 @@ public class mRajawaliRenderer extends org.rajawali3d.renderer.RajawaliRenderer 
     public void onTouchEvent(MotionEvent event) {
 
     }
+
+    /**
+     * Model
+     * */
+    public void setModelPosition(int x, int y, int z){
+
+    }
+    public void setModelRoate(int angle){
+
+    }
+    public void setModelScale(int scale){
+
+    }
+
+    /**
+     * Camera
+     * */
+    public void setCameraPosition(int x, int y, int z){
+
+    }
 }
