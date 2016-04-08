@@ -38,6 +38,7 @@ public class mRajawaliRenderer extends org.rajawali3d.renderer.RajawaliRenderer 
         super(context);
         this.context = context;
         setFrameRate(FRAME_RATE);
+
     }
 
     @Override

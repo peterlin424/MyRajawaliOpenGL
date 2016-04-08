@@ -1,7 +1,11 @@
 package com.example.linweijie.myrajawaliopengl;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 
 import org.rajawali3d.Camera;
@@ -18,9 +22,9 @@ import org.rajawali3d.math.vector.Vector3;
 public class ArcballCamera extends Camera {
 
     private Context mContext;
-    //    private ScaleGestureDetector mScaleDetector;
-//    private View.OnTouchListener mGestureListener;
-//    private GestureDetector mDetector;
+    private ScaleGestureDetector mScaleDetector;
+    private View.OnTouchListener mGestureListener;
+    private GestureDetector mDetector;
     private View mView;
     private boolean mIsRotating;
     private boolean mIsScaling;
@@ -47,6 +51,7 @@ public class ArcballCamera extends Camera {
         mTarget = target;
         mView = view;
         initialize();
+        addListeners();
     }
 
     private void initialize() {
@@ -165,6 +170,81 @@ public class ArcballCamera extends Camera {
         synchronized (mFrustumLock) {
             mStartFOV = fieldOfView;
             super.setFieldOfView(fieldOfView);
+        }
+    }
+
+    private void addListeners() {
+        ((Activity) mContext).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mDetector = new GestureDetector(mContext, new GestureListener());
+                mScaleDetector = new ScaleGestureDetector(mContext, new ScaleListener());
+
+                mGestureListener = new View.OnTouchListener() {
+                    public boolean onTouch(View v, MotionEvent event) {
+                        mScaleDetector.onTouchEvent(event);
+
+                        if (!mIsScaling) {
+                            mDetector.onTouchEvent(event);
+
+                            if (event.getAction() == MotionEvent.ACTION_UP) {
+                                if (mIsRotating) {
+                                    endRotation();
+                                    mIsRotating = false;
+                                }
+                            }
+                        }
+
+                        return true;
+                    }
+                };
+                mView.setOnTouchListener(mGestureListener);
+            }
+        });
+    }
+
+    public void setTarget(Object3D target) {
+        mTarget = target;
+        setLookAt(mTarget.getPosition());
+    }
+
+    public Object3D getTarget() {
+        return mTarget;
+    }
+
+    private class GestureListener extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onScroll(MotionEvent event1, MotionEvent event2, float distanceX, float distanceY) {
+//            if(!mIsRotating) {
+//                startRotation(event2.getX(), event2.getY());
+//                return false;
+//            }
+//            mIsRotating = true;
+//            updateRotation(event2.getX(), event2.getY());
+            return false;
+        }
+    }
+
+    private class ScaleListener
+            extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+        @Override
+        public boolean onScale(ScaleGestureDetector detector) {
+//            double fov = Math.max(30, Math.min(100, mStartFOV * (1.0 / detector.getScaleFactor())));
+//            setFieldOfView(fov);
+            return true;
+        }
+
+        @Override
+        public boolean onScaleBegin (ScaleGestureDetector detector) {
+            mIsScaling = true;
+            mIsRotating = false;
+            return super.onScaleBegin(detector);
+        }
+
+        @Override
+        public void onScaleEnd (ScaleGestureDetector detector) {
+            mIsRotating = false;
+            mIsScaling = false;
         }
     }
 }
