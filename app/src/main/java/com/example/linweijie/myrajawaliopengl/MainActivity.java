@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.rajawali3d.surface.IRajawaliSurface;
 import org.rajawali3d.surface.RajawaliSurfaceView;
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         Button bt_show = (Button)findViewById(R.id.bt_show);
         Button bt_reset = (Button)findViewById(R.id.bt_reset);
         Button bt_switch = (Button)findViewById(R.id.bt_switch);
+        Button bt_onoff = (Button)findViewById(R.id.bt_onoff);
 
         SWITCH_MODE = Pub.CHOOSE_MODEL;
 
@@ -71,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
         bt_show.setOnClickListener(onClickListener);
         bt_reset.setOnClickListener(onClickListener);
         bt_switch.setOnClickListener(onClickListener);
+        bt_onoff.setOnClickListener(onClickListener);
 
         sb_rx.setOnSeekBarChangeListener(seekBarChangeListener2);
         sb_ry.setOnSeekBarChangeListener(seekBarChangeListener2);
@@ -140,6 +143,14 @@ public class MainActivity extends AppCompatActivity {
                     sb_x.setProgress(tmp_x);
                     sb_y.setProgress(tmp_y);
                     sb_z.setProgress(tmp_z);
+                    break;
+                case R.id.bt_onoff:
+                    try{
+                        renderer.OnOff();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
                     break;
             }
         }
