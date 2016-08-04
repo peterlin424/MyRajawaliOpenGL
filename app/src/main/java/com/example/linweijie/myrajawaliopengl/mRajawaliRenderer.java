@@ -14,7 +14,12 @@ import org.rajawali3d.lights.PointLight;
 import org.rajawali3d.loader.ParsingException;
 import org.rajawali3d.loader.md5.LoaderMD5Anim;
 import org.rajawali3d.loader.md5.LoaderMD5Mesh;
+import org.rajawali3d.materials.Material;
+import org.rajawali3d.materials.methods.DiffuseMethod;
+import org.rajawali3d.materials.textures.Texture;
 import org.rajawali3d.materials.textures.VideoTexture;
+import org.rajawali3d.primitives.Cube;
+import org.rajawali3d.primitives.Plane;
 import org.rajawali3d.util.debugvisualizer.DebugVisualizer;
 import org.rajawali3d.util.debugvisualizer.GridFloor;
 
@@ -102,20 +107,39 @@ public class mRajawaliRenderer extends org.rajawali3d.renderer.RajawaliRenderer 
 //
 //            // Create video texture and apply to material
 //            mVideoTexture = new VideoTexture("VideoTexture", mMediaPlayer);
+//
 //            Material mVideo = new Material();
 //            mVideo.setColorInfluence(0);
+//            mVideo.enableLighting(true);
+//            mVideo.setDiffuseMethod(new DiffuseMethod.Lambert());
 //            mVideo.addTexture(mVideoTexture);
 //
 //            // Create object
-//            watch = new Plane(3f,3f,5,5);
+//            watch = new Plane(10f,10f,1,1);
 //            watch.setMaterial(mVideo);
+//            watch.setDoubleSided(true);
 //            watch.setPosition(INIT_MODEL_X, INIT_MODEL_Y + 2, INIT_MODEL_Z);
-//            wwatch0011_bitmap.jpgwatch.fbxatch.setScale(INIT_MODEL_SCALE);
 //
 //            watch.setRotZ(-90f); //  Rotate as video texture displays up-side-down
 //            watch.setRotY(180f); //  Rotate as video texture displays up-side-down
 //            getCurrentScene().addChild(watch);
 //            mMediaPlayer.setLooping(true);
+
+            /** Cylinder */
+            Material material = new Material();
+            material.setColorInfluence(1);
+            material.enableLighting(true);
+            material.setDiffuseMethod(new DiffuseMethod.Lambert());
+            material.setColor(0x990000);
+            material.addTexture(new Texture("Watch1", R.drawable.watch001));
+
+            watch = new Cylinder(10, 2, 1, 10);
+//            watch = new Cube(1);
+            watch.setMaterial(material);
+            watch.setPosition(INIT_MODEL_X, INIT_MODEL_Y + 2, INIT_MODEL_Z);
+            watch.setScale(INIT_MODEL_SCALE);
+            watch.setDoubleSided(true);
+            getCurrentScene().addChild(watch);
 
             /** FBX */
 //            LoaderFBX parser = new LoaderFBX(this, R.raw.bacteria2);
@@ -124,19 +148,19 @@ public class mRajawaliRenderer extends org.rajawali3d.renderer.RajawaliRenderer 
 //            getCurrentScene().addChild(watch);
 
             /** MD5 */
-            LoaderMD5Mesh meshParser = new LoaderMD5Mesh(this, R.raw.boblampclean_mesh);
-            meshParser.parse();
-            mObject = (SkeletalAnimationObject3D) meshParser.getParsedAnimationObject();
-
-            LoaderMD5Anim animParser = new LoaderMD5Anim("boblampclean", this, R.raw.boblampclean_anim);
-            animParser.parse();
-            mSequenceIdle = (SkeletalAnimationSequence) animParser.getParsedAnimationSequence();
-
-            mObject.setAnimationSequence(mSequenceIdle);
-            mObject.setFps(24);
-            mObject.play();
-
-            getCurrentScene().addChild(mObject);
+//            LoaderMD5Mesh meshParser = new LoaderMD5Mesh(this, R.raw.boblampclean_mesh);
+//            meshParser.parse();
+//            mObject = (SkeletalAnimationObject3D) meshParser.getParsedAnimationObject();
+//
+//            LoaderMD5Anim animParser = new LoaderMD5Anim("boblampclean", this, R.raw.boblampclean_anim);
+//            animParser.parse();
+//            mSequenceIdle = (SkeletalAnimationSequence) animParser.getParsedAnimationSequence();
+//
+//            mObject.setAnimationSequence(mSequenceIdle);
+//            mObject.setFps(24);
+//            mObject.play();
+//
+//            getCurrentScene().addChild(mObject);
 
             /** AWD */
 //            final LoaderAWD parser = new LoaderAWD(mContext.getResources(), mTextureManager, R.raw.boblampclean_anim_awd);
@@ -160,8 +184,8 @@ public class mRajawaliRenderer extends org.rajawali3d.renderer.RajawaliRenderer 
             arcball = new ArcballCamera(mContext, ((Activity)mContext).findViewById(R.id.rejawali_layout));
             arcball.setPosition(INIT_CAMERA_X, INIT_CAMERA_Y, INIT_CAMERA_Z);
             getCurrentScene().replaceAndSwitchCamera(getCurrentCamera(), arcball);
-        } catch (ParsingException e){
-            Log.d("test", e.getMessage());
+//        } catch (ParsingException e){
+//            Log.d("test", e.getMessage());
         } catch (Exception e){
             e.printStackTrace();
         }
